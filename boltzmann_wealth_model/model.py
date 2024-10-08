@@ -1,5 +1,5 @@
 import mesa
-
+import random
 
 def compute_gini(model):
     agent_wealths = [agent.wealth for agent in model.agents]
@@ -62,7 +62,17 @@ class MoneyAgent(mesa.Agent):
 
     def __init__(self, unique_id, model):
         super().__init__(unique_id, model)#
-        self.wealth = 1
+        self.wealth = random.randint(1, 5) # set the value randomly
+        self.color = self.set_color() # set color for agent
+
+    # based on wealth defined color of agent
+    def set_color(self):
+        """Set agent color based on wealth."""
+        if self.wealth <= 2:
+            return "blue"
+        elif self.wealth <= 5:
+            return "green"
+        return "red"
 
     def move(self):
         possible_steps = self.model.grid.get_neighborhood(
@@ -71,18 +81,26 @@ class MoneyAgent(mesa.Agent):
         new_position = self.random.choice(possible_steps)
         self.model.grid.move_agent(self, new_position)
 
-
     def give_money(self):
         cellmates = self.model.grid.get_cell_list_contents([self.pos])
         cellmates.pop(cellmates.index(self))  # Ensure agent is not giving money to itself
-        if len(cellmates) > 0 and self.wealth > 0:
+        if len(cellmates) > 0 and self.wealth > 1: # only give money if wealth > 1
             other = self.random.choice(cellmates)
             other.wealth += 1
             self.wealth -= 1
 
+    # new function for bonus
+    def receive_bonus(self):
+        """Receive a bonus for wealth greater than a certain threshold."""
+        if self.wealth > 5:
+            bonus = 2
+            self.wealth += bonus
+
     def step(self):
         self.move()
-        if self.wealth > 0:
+        if self.wealth > 1: # only attempt to give money if wealth > 1
             self.give_money()
+        self.receive_bonus()  # check for bonuses
+        self.color = self.set_color()
         print(f"Agent {self.unique_id} has {self.wealth} wealth")
 
