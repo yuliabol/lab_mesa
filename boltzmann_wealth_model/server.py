@@ -3,16 +3,24 @@ import mesa
 from .model import BoltzmannWealthModel
 
 
-def agent_portrayal(agent):
-    portrayal = {"Shape": "circle", "Filled": "true", "r": 0.5}
+# def agent_portrayal(agent):
+#     portrayal = {"Shape": "circle", "Filled": "true", "r": 0.5}
+#
+#     if agent.wealth > 0:
+#         portrayal["Color"] = "red"
+#         portrayal["Layer"] = 0
+#     else:
+#         portrayal["Color"] = "grey"
+#         portrayal["Layer"] = 1
+#         portrayal["r"] = 0.2
+#     return portrayal
 
-    if agent.wealth > 0:
-        portrayal["Color"] = "red"
-        portrayal["Layer"] = 0
-    else:
-        portrayal["Color"] = "grey"
-        portrayal["Layer"] = 1
-        portrayal["r"] = 0.2
+
+#set new colors for agents
+def agent_portrayal(agent):
+    portrayal = {"Shape": "circle", "Filled": "true", "r": 0.5, "Layer":0.8}
+    portrayal["Color"] = agent.color
+    portrayal["Filled"] = "true"
     return portrayal
 
 
